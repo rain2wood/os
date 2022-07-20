@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  main:
+    machine:
+      image: ubuntu-2004:202010-01 # recommended linux image
+    resource_class: 2xlarge
+    steps:
+      - checkout
+      - run:
+          name: Build OS Image
+          command: |
+              docker run --privileged -i -v /proc:/proc \
+              -v ${PWD}:/working_dir \
+              -w /working_dir \
+              debian:latest \
+              /bin/bash -s etc/terraform-daily-7.0-azure.conf < build.sh
+              cd builds/*/
+              sudo chmod -R 0777 .
+              sudo chmod 0777 *            
+              sudo mkdir -p /tmp/artifacts
+              sudo mv builds/*/*.iso /tmp/artifacts/
+      - store_artifacts:
+          path: /tmp/artifacts/4-b68a-cd2c0ba58752/jobs/1
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  build:
+    jobs:
+      - main
