@@ -15,12 +15,12 @@ jobs:
               -v ${PWD}:/working_dir \
               -w /working_dir \
               debian:latest \
-              /bin/bash -s etc/terraform-daily-7.0-azure.conf < build.sh
+              /bin/bash -s etc/terraform-daily-6.1-azure.conf < build.sh
               cd builds/*/
               sudo chmod -R 0777 .
               sudo chmod 0777 *            
               sudo mkdir -p /tmp/build-artifacts/
-              sudo mv $(find builds | grep -i iso) /tmp/build-artifacts/
+              sudo mv $(find | grep -i iso) /tmp/build-artifacts/
 
       - store_artifacts:
           path: /tmp/build-artifacts/
